@@ -57,9 +57,8 @@ end
 
 #show info about post
 get '/details/:post_id' do
-  post_id = params[:post_id]
-
-  post_info post_id
+  @row = Post.find(params[:post_id])
+  @comments = Comment.find_by post_id:(params[:post_id])
 
   erb :details
 end

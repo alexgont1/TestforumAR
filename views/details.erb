@@ -4,19 +4,22 @@
 	<%= @row['content'] %>
 	<br>
 	<span style="font-size: 75%">
-		Added at: <%= @row['created_date'] %>
+		Added at: <%= @row['created_at'] %>
 	</span>
 </h5>
 
 <h2>Comments:</h2>
-<% @comments.each do |comment| %>
-	<p>
-		<h6><%= comment['content'] %></h6>
-		<span style="font-size: 75%">
-			Added at <%= comment['created_date'] %>		
-		</span>
-	</p>
-	<hr>
+
+<% if @comments != nil%>
+	<% @comments.each do |comment| %>
+		<p>
+			<h6><%= comment['content'] %></h6>
+			<span style="font-size: 75%">
+				Added at <%= comment['created_at'] %>		
+			</span>
+		</p>
+		<hr>
+	<% end %>
 <% end %>
 
 <p>
