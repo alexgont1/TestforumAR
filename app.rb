@@ -1,34 +1,43 @@
 require 'rubygems'
 require 'sinatra'
 require 'sinatra/reloader'
-require 'sqlite3'
+require 'sinatra/activerecord'
 
-def init_db
-  @db = SQLite3::Database.new 'testforum.db'
-  @db.results_as_hash = true
-end
+set :database, "sqlite3:testforum.db"
+#tables:
+#posts [created_at, post_name TEXT, content TEXT]
+#comments [created_at, content TEXT, post_id INTEGER]
 
 before do
-  init_db
+#init db
+end
+
+class Post < ActiveRecord::Base
+  validates :post_name, presence: true, length: { minimum: 2 }
+  validates :content, presence: true, length: { minimum: 2 }
+end
+
+class Comment < ActiveRecord::Base
+  validates :content, presence: true, length: { minimum: 2 }
 end
 
 configure do
-  init_db
-  @db.execute 'CREATE TABLE IF NOT EXISTS Posts 
-  (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    created_date DATE,
-    post_name TEXT,
-    content TEXT
-  )'
+  # init_db
+  # @db.execute 'CREATE TABLE IF NOT EXISTS Posts 
+  # (
+  #   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  #   created_date DATE,
+  #   post_name TEXT,
+  #   content TEXT
+  # )'
 
-  @db.execute 'CREATE TABLE IF NOT EXISTS Comments 
-  (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    created_date DATE,
-    content TEXT,
-    post_id INTEGER
-  )'
+  # @db.execute 'CREATE TABLE IF NOT EXISTS Comments 
+  # (
+  #   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  #   created_date DATE,
+  #   content TEXT,
+  #   post_id INTEGER
+  # )'
 end
 
 def post_info post_id
@@ -42,7 +51,7 @@ def post_info post_id
 end
 
 get '/' do
-  @results = @db.execute 'SELECT * FROM Posts ORDER BY id DESC'
+  @results = Post.order "created_at DESC"
   erb :index
 end
 
