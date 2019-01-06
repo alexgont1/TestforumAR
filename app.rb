@@ -9,7 +9,6 @@ set :database, "sqlite3:testforum.db"
 #comments [created_at, content TEXT, post_id INTEGER]
 
 before do
-#init db
 end
 
 class Post < ActiveRecord::Base
@@ -22,22 +21,6 @@ class Comment < ActiveRecord::Base
 end
 
 configure do
-  # init_db
-  # @db.execute 'CREATE TABLE IF NOT EXISTS Posts 
-  # (
-  #   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  #   created_date DATE,
-  #   post_name TEXT,
-  #   content TEXT
-  # )'
-
-  # @db.execute 'CREATE TABLE IF NOT EXISTS Comments 
-  # (
-  #   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  #   created_date DATE,
-  #   content TEXT,
-  #   post_id INTEGER
-  # )'
 end
 
 def post_info post_id
@@ -56,29 +39,20 @@ get '/' do
 end
 
 get '/new' do
+  @p = Post.new
   erb :new
 end
 
 post '/new' do
-  post_name = params[:post_name]
-  content = params[:content]
-
-  if post_name.length < 1
-    @error = 'Type your name '
-    return erb :new
+  @p = Post.new params[:post]
+  
+  if @p.save
+    redirect to '/' #go to main page if OK
+  else
+    @error = @p.errors.full_messages.first
+    erb :new
   end
 
-  if content.length < 1
-    @error = 'Type post text'
-    return erb :new
-  end
-
-  #save post in DB
-  @db.execute 'INSERT INTO Posts (post_name, content, created_date) 
-  VALUES (?, ?, datetime())', [post_name, content]
-
-  #open main page
-  redirect to '/'
 end
 
 #show info about post

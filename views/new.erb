@@ -3,9 +3,14 @@
 	<form action="/new" method="POST" role="form">
 		<div class="form-group">
 		    <label>Your name:</label>
-		    <input type="text" class="form-control" placeholder="Type your name here" name="post_name" autofocus="on">
+		    <input type="text" class="form-control" placeholder="Type your name here" name="post[post_name]" 
+		    value="<%= @p.post_name %>">
   		</div>
-		<textarea class="form-control" rows="6" name="content" placeholder="Type post here"></textarea><br>
+
+  		<label>Your post text:</label>
+		<textarea class="form-control" rows="6" name="post[content]" 		value = "<%= @p.content %>"></textarea>
+		
+		<br>
 	 	<button type="submit" class="btn btn-primary">Submit</button>
 	</form>
 </p>
